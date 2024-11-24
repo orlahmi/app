@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .cash {
+            font-weight: bold;
+        }
+
+        /* Registration Page */
+        .registration {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 250px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Hidden sections */
+        .app {
+            display: none;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Registration Page -->
+    <div class="registration">
+        <h1>Register</h1>
+        <input type="text" id="username" placeholder="Enter your username" />
+        <input type="number" id="cash" placeholder="Enter initial cash amount" />
+        <button onclick="register()">Submit</button>
+    </div>
+
+    <!-- App Page -->
+    <div class="app">
+        <div class="header">
+            <div class="profile">
+                <img id="profile-pic" src="https://via.placeholder.com/40" alt="Profile Pic">
+                <span id="user-name">Username</span>
+            </div>
+            <div class="cash">
+                $<span id="user-cash">0</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Welcome to the Mini App!</h2>
+            <button onclick="uploadPicture()">Change Profile Picture</button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        // Register user and show the app
+        function register() {
+            const username = document.getElementById('username').value;
+            const cash = document.getElementById('cash').value;
+
+            if (!username || !cash) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            // Save data and send to bot
+            const data = { username, cash };
+            tg.sendData(JSON.stringify(data));
+
+            // Update UI
+            document.getElementById('user-name').textContent = username;
+            document.getElementById('user-cash').textContent = cash;
+
+            // Show app page and hide registration
+            document.querySelector('.registration').style.display = 'none';
+            document.querySelector('.app').style.display = 'block';
+        }
+
+        // Upload a new profile picture
+        function uploadPicture() {
+            const newPic = prompt("Enter URL of your new profile picture:");
+            if (newPic) {
+                document.getElementById('profile-pic').src = newPic;
+            }
+        }
+
+        // Expand Telegram Web App
+        tg.expand();
+    </script>
+</body>
+</html>
